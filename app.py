@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 import numpy as np
 import pandas as pd
 from sklearn.ensemble import RandomForestRegressor
-#from sklearn.linear_model import ElasticNet
+# from sklearn.linear_model import ElasticNet
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
@@ -35,7 +35,8 @@ if __name__ == "__main__":
 
     from sklearn.datasets import fetch_california_housing
     housing = fetch_california_housing()
-    housing_df = pd.DataFrame(housing['data'], columns=housing['feature_names'])
+    housing_df = pd.DataFrame(
+        housing['data'], columns=housing['feature_names'])
 
     # Read the wine-quality csv file from the URL
     # csv_url = (
@@ -63,7 +64,7 @@ if __name__ == "__main__":
 
     with mlflow.start_run():
         # lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
-        lr = RandomForestRegressor(random_state= 42)
+        lr = RandomForestRegressor(random_state=42)
         lr.fit(train_x, train_y)
 
         predicted_qualities = lr.predict(test_x)
@@ -83,6 +84,10 @@ if __name__ == "__main__":
 
         predictions = lr.predict(train_x)
         signature = infer_signature(train_x, predictions)
+
+        # for remote server
+        remote_server_uri = "https://dagshub.com/iamajithkb/californiahouseprice_mlflow.mlflow"
+        mlflow.set_tracking_uri(remote_server_uri)
 
         tracking_url_type_store = urlparse(mlflow.get_tracking_uri()).scheme
 
